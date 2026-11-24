@@ -6,8 +6,14 @@ build/
 dist/
 .pytest_cache/
 .coverage
+htmlcov/
+.ruff_cache/
+.DS_Store
+Thumbs.db
 .env
 .env.*
+!/.env.example
+configs/*.local.toml
 outputs/*
 !outputs/.gitkeep
 data/local/*

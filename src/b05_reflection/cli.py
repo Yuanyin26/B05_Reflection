@@ -19,6 +19,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--test", action="store_true", help="Accept the official evaluation flag")
     result.add_argument("--out-dir", default=None)
     result.add_argument("--data-root", default=None, help="Local override of DATA_ROOT")
+    result.add_argument("--config", default=None, help="Non-sensitive TOML config; environment and CLI values take precedence")
+    result.add_argument("--log-level", type=str.upper, choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default=None)
     result.add_argument("--check-only", action="store_true", help="Check JSON syntax and configuration presence")
     return result
 
@@ -52,7 +54,7 @@ def run_check(config: RuntimeConfig, task: str) -> int:
     diagnostics = config.out_dir / "diagnostics"
     diagnostics.mkdir(parents=True, exist_ok=True)
     log = logging.getLogger("b05_reflection.check")
-    log.setLevel(logging.INFO)
+    log.setLevel(config.log_level)
     log.propagate = False
     handler = logging.FileHandler(diagnostics / "research.log", encoding="utf-8")
     handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
@@ -62,6 +64,7 @@ def run_check(config: RuntimeConfig, task: str) -> int:
         "version": __version__,
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "task": task,
+        "log_level": config.log_level,
         "status": "failed" if errors else "passed",
         "files": files,
         "errors": errors,
@@ -88,7 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.check_only:
         arg_parser.exit(2, "Research execution is not implemented. Use --check-only for scaffold diagnostics.\n")
     try:
-        config = RuntimeConfig.load(args.data_root, args.out_dir)
+        config = RuntimeConfig.load(args.data_root, args.out_dir, config_path=args.config, log_level=args.log_level)
         return run_check(config, args.task)
     except (ValueError, OSError) as exc:
         arg_parser.exit(1, f"Scaffold check failed: {exc}\n")

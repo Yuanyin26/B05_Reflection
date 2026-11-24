@@ -1,0 +1,30 @@
+services:
+  research:
+    build: .
+    image: b05-reflection:local
+    command: ["--task", "all", "--test", "--check-only", "--config", "/app/config/research.toml", "--out-dir", "/output"]
+    environment:
+      B05_LOG_LEVEL: ${B05_LOG_LEVEL:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_USE_JSON_SCHEMA: ${LLM_USE_JSON_SCHEMA:-}
+      LLM_ENABLE_THINKING: ${LLM_ENABLE_THINKING:-}
+    volumes:
+      - type: bind
+        source: ${B05_INPUT_DIR:-./data/examples}
+        target: /input
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${B05_OUTPUT_DIR:-./outputs/docker}
+        target: /output
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${B05_CONFIG_FILE:-./configs/config.example.toml}
+        target: /app/config/research.toml
+        read_only: true
+        bind:
+          create_host_path: false
