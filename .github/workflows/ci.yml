@@ -41,13 +41,13 @@ jobs:
       - name: Run Windows example
         if: runner.os == 'Windows'
         shell: pwsh
-        run: ./examples/run_local.ps1
+        run: ./examples/run_local.ps1 -PythonExecutable (Get-Command python).Source
       - name: Run Linux example and fixed entry
         if: runner.os == 'Linux'
         shell: bash
         run: |
           bash -n run.sh examples/run_local.sh
-          bash examples/run_local.sh
+          B05_PYTHON="$(command -v python)" bash examples/run_local.sh
           bash run.sh --task all --test --check-only --data-root data/examples --out-dir outputs/entry
 
   container:

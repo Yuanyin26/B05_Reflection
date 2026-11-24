@@ -40,7 +40,7 @@ python src/main.py --check-only --config configs/config.example.toml
 
 示例不填真实密钥、网关或模型名；程序不自动加载 dotenv 文件，TOML 也不接受模型凭证。当前自检只记录模型参数是否存在，不代表已连通。客户端实现前，超时、重试和调用预算需要另行确定。
 
-## 本地环境变量示例
+## 开发环境变量示例
 
 在仓库根目录的 PowerShell 中：
 
@@ -59,29 +59,10 @@ DATA_ROOT="$PWD/data/examples" OUTPUT_DIR="$PWD/outputs/env-example" \
 
 这两个示例只设置输入输出目录。模型参数由获授权的运行环境注入，示例和 GitHub CI 均不需要设置模型密钥。
 
-## GitHub 与本地资料
+## 文件管理
 
 - `data/examples/` 中的通用样例随仓库提交。
 - `data/local/`、`outputs/`、虚拟环境和运行缓存由 `.gitignore` 排除。
 - `.env.example` 和 `config.example.toml` 可提交；真实 `.env*` 及 `configs/*.local.toml` 被忽略，所有 env 文件和配置目录均不进入镜像。
 - 仓库外的官方资料通过路径引用；克隆仓库时不自动下载。
 - GitHub Actions 使用 Python 3.11，在 Windows、Linux 和 Linux 容器中检查工程入口；容器使用同一份 Compose 配置，不进行模型调用。
-
-## Docker 镜像下载
-
-如果构建出现 `failed to fetch oauth token` 或连接 `auth.docker.io` 超时，先检查镜像仓库连通性。Windows 系统代理可用时，构建工具仍可能需要命令行代理变量。
-
-以下 PowerShell 示例读取现有系统代理，只设置当前终端进程的环境变量；不将代理地址写入项目，也不更改全局配置：
-
-```powershell
-$dockerAuthUri = [Uri]"https://auth.docker.io"
-$dockerProxyUri = [System.Net.WebRequest]::DefaultWebProxy.GetProxy($dockerAuthUri)
-if ($null -eq $dockerProxyUri -or $dockerProxyUri.Host -eq $dockerAuthUri.Host) {
-    throw "没有检测到适用的系统代理，请先检查网络或现有代理软件。"
-}
-$env:HTTP_PROXY = $dockerProxyUri.AbsoluteUri
-$env:HTTPS_PROXY = $dockerProxyUri.AbsoluteUri
-docker compose run --rm --build research
-```
-
-本机首次构建已验证：直连镜像认证服务超时，临时沿用现有系统代理后构建和自检成功。镜像构建完成且源码未变化时，可用 `docker compose run --rm research` 直接重跑，无需再次构建。

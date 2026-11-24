@@ -3,10 +3,11 @@ set -euo pipefail
 
 B05_PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 if [[ -z "${B05_PYTHON:-}" ]]; then
-    if [[ -x "$B05_PROJECT_ROOT/.venv/bin/python" ]]; then
-        B05_PYTHON="$B05_PROJECT_ROOT/.venv/bin/python"
+    if [[ -n "${CONDA_PREFIX:-}" && "${CONDA_PREFIX##*/}" == "b05-reflection" && -x "$CONDA_PREFIX/bin/python" ]]; then
+        B05_PYTHON="$CONDA_PREFIX/bin/python"
     else
-        B05_PYTHON=python3
+        echo "Activate Conda environment b05-reflection, or set B05_PYTHON explicitly." >&2
+        exit 1
     fi
 fi
 

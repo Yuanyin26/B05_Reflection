@@ -1,0 +1,4 @@
+name: b05-reflection
+dependencies:
+  - python=3.11
+  - pip
