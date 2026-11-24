@@ -1,0 +1,8 @@
+{
+  "record_id": "local-check-002",
+  "document": {
+    "title": "Research meeting note",
+    "text": "Keep a source list, record open questions, and agree on the next review date."
+  },
+  "description": "A second domain-neutral JSON input for local and CI checks."
+}

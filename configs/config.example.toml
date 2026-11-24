@@ -1,0 +1,11 @@
+# Non-sensitive runtime settings. Python 3.11+ reads this file via --config.
+# Precedence: command line > non-empty environment > this file > defaults.
+# Relative paths are resolved against this file's directory.
+[runtime]
+data_root = "../data/examples"
+out_dir = "../outputs/local"
+log_level = "INFO"
+
+# Docker supplies DATA_ROOT=/input and OUTPUT_DIR=/output, overriding these paths.
+# Model configuration comes only from injected LLM_* environment variables.
+# Algorithm settings will be added after the research method is selected.

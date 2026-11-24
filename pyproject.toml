@@ -9,5 +9,8 @@ description = "Generic reflection and memory research workspace"
 requires-python = ">=3.11"
 dependencies = []
 
+[project.urls]
+Repository = "https://github.com/Yuanyin26/B05_Reflection"
+
 [tool.setuptools.packages.find]
 where = ["src"]
