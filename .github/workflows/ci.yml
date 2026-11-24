@@ -66,6 +66,8 @@ jobs:
       - name: Check container entry and read-only input
         shell: bash
         run: |
-          docker compose run --rm research --help
+          # Prepare the bind source before any container, including --help.
+          # Otherwise the daemon can create a root-owned directory on Linux.
           mkdir -p outputs/docker
+          docker compose run --rm --user "$(id -u):$(id -g)" research --help
           docker compose run --rm --user "$(id -u):$(id -g)" research
