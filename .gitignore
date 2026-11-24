@@ -10,6 +10,11 @@ htmlcov/
 .ruff_cache/
 .DS_Store
 Thumbs.db
+/.local/
+/.local-notes/
+/.private/
+/.vscode/settings.json
+*.code-workspace
 .env
 .env.*
 !/.env.example

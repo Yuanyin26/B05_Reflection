@@ -7,11 +7,14 @@ $ErrorActionPreference = "Stop"
 $researchRoot = Split-Path -Parent $PSScriptRoot
 
 if (-not $PythonExecutable) {
-    $researchVenvPython = Join-Path $researchRoot ".venv\Scripts\python.exe"
-    if (Test-Path -LiteralPath $researchVenvPython) {
-        $PythonExecutable = $researchVenvPython
-    } else {
-        $PythonExecutable = "python"
+    if ($env:CONDA_PREFIX -and (Split-Path -Leaf $env:CONDA_PREFIX) -eq "b05-reflection") {
+        $researchCondaPython = Join-Path $env:CONDA_PREFIX "python.exe"
+        if (Test-Path -LiteralPath $researchCondaPython) {
+            $PythonExecutable = $researchCondaPython
+        }
+    }
+    if (-not $PythonExecutable) {
+        throw "Activate Conda environment b05-reflection, or pass -PythonExecutable explicitly."
     }
 }
 

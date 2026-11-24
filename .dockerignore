@@ -1,5 +1,10 @@
 .git
 .github
+.local
+.local-notes
+.private
+.vscode
+*.code-workspace
 .venv
 **/__pycache__
 **/*.pyc
